@@ -1,10 +1,15 @@
 ﻿using System.Reflection;
 using System.Collections;
+using System.Security.Cryptography;
 
 namespace ConsoleApp4
 {
-    public class Human
+    public class Human : ICloneable
     {
+        public object Clone()
+        {
+           return this.MemberwiseClone();
+        }
         public string? Name { get; set; }
         public int Age { get; set; }
         public Human(string? name, int age)
@@ -103,8 +108,16 @@ namespace ConsoleApp4
         }
     }
 
-    class Personal : IEnumerable
+    class Personal : IEnumerable, ICloneable
     {
+        public object Clone()
+        {
+            List<Human> npersonal = new();
+            foreach(Human person in personal) npersonal.Add(person);
+            Personal nobject = new(npersonal);
+            return nobject;
+        }
+
         List<Human> personal;
         public Personal(List<Human> personal)
         {
@@ -181,8 +194,13 @@ namespace ConsoleApp4
             {
                 worker.Work();
             }
-
+            //Worker sasha2 = (Worker)sasha.Clone();
+            //Console.WriteLine(sasha2.getSalaryInfo());
+            Human sasha2 = (Human)sasha.Clone();
+            Console.WriteLine(sasha2.ToString());
 
         }
     }
 }
+
+
