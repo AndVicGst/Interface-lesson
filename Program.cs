@@ -82,6 +82,25 @@ namespace ConsoleApp4
             Console.WriteLine($"{this}: {_job}");
         }
     }
+    public class Boss : Human, ISalary
+    {
+        protected int? _salary;
+        public int Salary
+        {
+            set
+            {
+                _salary= value;
+            }
+        }
+        public Boss(string? name, int age, int salary) : base(name, age)
+        {
+            Salary = salary;
+        }
+        public string getSalaryInfo()
+        {
+            return $"{this}: {_salary} денег";
+        }
+    }
     internal class Program
     {
         static void Main(string[] args)
@@ -91,29 +110,40 @@ namespace ConsoleApp4
             Worker[] workers = { anton, sasha };
             anton.Salary = 200;
             sasha.Salary = 300;
-            foreach(Worker worker in workers)
-            {
-                worker.Work();
-            }
+
             Console.WriteLine();
-            foreach (Worker worker in workers)
-            {
-                Console.WriteLine(worker.getSalaryInfo());
-            }
-            Prisoner evgen = new Prisoner("Евгений", 20, "копает");
+            //foreach (Worker worker in workers)
+            //{
+            //    Console.WriteLine(worker.getSalaryInfo());
+            //}
+            Prisoner evgen = new Prisoner("Евгений", 20, "копаю");
+            Prisoner kolya = new Prisoner("Коля", 20, "несу");
             IWorker[] workers1 = { anton, sasha, evgen };
 
             Console.WriteLine();
-            foreach(IWorker worker in workers1)
+            //foreach(IWorker worker in workers1)
+            //{
+            //    Console.WriteLine(
+            //        (worker as ISalary)?.getSalaryInfo()
+            //        );
+            //}
+
+            //foreach (IWorker worker in workers1)
+            //{
+            //    worker.Work();
+            //}
+            Boss boss = new Boss("Boss", 40, 500);
+
+            Human[] humans = { anton, sasha, evgen, boss, kolya };
+
+            foreach (Human human in humans)
             {
-                Console.WriteLine(
-                    (worker as ISalary)?.getSalaryInfo()
-                    );
+                if ((human as IWorker) != null) (human as IWorker)?.Work();
             }
             Console.WriteLine();
-            foreach (IWorker worker in workers1)
+            foreach (Human human in humans)
             {
-                worker.Work();
+                if ((human as ISalary) != null)  Console.WriteLine((human as ISalary)?.getSalaryInfo());
             }
 
         }
