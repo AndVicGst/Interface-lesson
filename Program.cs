@@ -13,7 +13,7 @@ namespace ConsoleApp4
         }   
         public override string ToString()
         {
-            return $"{Name}\n";
+            return $"{Name}";
         }
 
     }
@@ -63,6 +63,25 @@ namespace ConsoleApp4
         }
     }
 
+    public class Prisoner : Human, IWorker
+    {
+        protected string? _job;
+        public string? Job
+        {
+            set
+            {
+                _job = value;
+            }
+        }
+        public Prisoner(string? name, int age, string? job) : base(name, age)
+        {
+            Job = job;
+        }
+        public void Work()
+        {
+            Console.WriteLine($"{this}: {_job}");
+        }
+    }
     internal class Program
     {
         static void Main(string[] args)
@@ -79,9 +98,23 @@ namespace ConsoleApp4
             Console.WriteLine();
             foreach (Worker worker in workers)
             {
-                worker.getSalaryInfo();
+                Console.WriteLine(worker.getSalaryInfo());
             }
+            Prisoner evgen = new Prisoner("Евгений", 20, "копает");
+            IWorker[] workers1 = { anton, sasha, evgen };
 
+            Console.WriteLine();
+            foreach(IWorker worker in workers1)
+            {
+                Console.WriteLine(
+                    (worker as ISalary)?.getSalaryInfo()
+                    );
+            }
+            Console.WriteLine();
+            foreach (IWorker worker in workers1)
+            {
+                worker.Work();
+            }
 
         }
     }
