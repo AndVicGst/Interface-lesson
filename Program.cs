@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Collections;
 
 namespace ConsoleApp4
 {
@@ -101,26 +102,48 @@ namespace ConsoleApp4
             return $"{this}: {_salary} денег";
         }
     }
+
+    class Personal : IEnumerable
+    {
+        List<Human> personal;
+        public Personal(List<Human> personal)
+        {
+            this.personal = personal;
+        }
+        public List<IWorker> Workers
+        {
+            get
+            {
+                List<IWorker> workers = new();
+                foreach (Human human in personal) if ((human as IWorker) != null) workers.Add(human as IWorker);
+                return workers;
+            }
+        }
+        public IEnumerator GetEnumerator()
+        {
+            return personal.GetEnumerator();
+        }
+    }
+
     internal class Program
     {
         static void Main(string[] args)
         {
-            Worker sasha = new Worker("Саша", 30, "кручу" );
-            Worker anton = new Worker("Антон", 25, "еду");
-            Worker[] workers = { anton, sasha };
-            anton.Salary = 200;
+            Worker sasha = new Worker("Саша", 30, "кручу");
+            //Worker anton = new Worker("Антон", 25, "еду");
+            //Worker[] workers = { anton, sasha };
+            //anton.Salary = 200;
             sasha.Salary = 300;
 
-            Console.WriteLine();
+            //Console.WriteLine();
             //foreach (Worker worker in workers)
             //{
             //    Console.WriteLine(worker.getSalaryInfo());
             //}
             Prisoner evgen = new Prisoner("Евгений", 20, "копаю");
-            Prisoner kolya = new Prisoner("Коля", 20, "несу");
-            IWorker[] workers1 = { anton, sasha, evgen };
+            //Prisoner kolya = new Prisoner("Коля", 20, "несу");
+            //IWorker[] workers1 = { anton, sasha, evgen };
 
-            Console.WriteLine();
             //foreach(IWorker worker in workers1)
             //{
             //    Console.WriteLine(
@@ -134,17 +157,31 @@ namespace ConsoleApp4
             //}
             Boss boss = new Boss("Boss", 40, 500);
 
-            Human[] humans = { anton, sasha, evgen, boss, kolya };
+            //Human[] humans = { anton, sasha, evgen, boss, kolya };
 
-            foreach (Human human in humans)
+            //foreach (Human human in humans)
+            //{
+            //    if ((human as IWorker) != null) (human as IWorker)?.Work();
+            //}
+            //Console.WriteLine();
+            //foreach (Human human in humans)
+            //{
+            //    if ((human as ISalary) != null)  Console.WriteLine((human as ISalary)?.getSalaryInfo());
+            //}
+            List<Human> humans = new List<Human>();
+            humans.Add(sasha);
+            humans.Add(evgen);  
+            humans.Add(boss);   
+            Personal personal = new(humans);
+            foreach(Human human in personal)
             {
-                if ((human as IWorker) != null) (human as IWorker)?.Work();
-            }
-            Console.WriteLine();
-            foreach (Human human in humans)
+                Console.WriteLine(human);
+            }    
+            foreach (IWorker worker in personal.Workers)
             {
-                if ((human as ISalary) != null)  Console.WriteLine((human as ISalary)?.getSalaryInfo());
+                worker.Work();
             }
+
 
         }
     }
